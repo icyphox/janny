@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: janny
+  labels:
+    app: janny
+  annotations:
+    janny.ttl: "2m"
+spec:
+  selector:
+    matchLabels:
+      app: janny
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: janny
+    spec:
+      serviceAccountName: janny
+      containers:
+        - name: janny
+          image: janny:latest
+          imagePullPolicy: IfNotPresent
