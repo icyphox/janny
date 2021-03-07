@@ -1,0 +1,42 @@
+JANNY
+
+A work-in-progress Kubernetes application to clean up Kubernetes
+resources after a set TTL.
+
+
+ROADMAP
+
+[ ] Implement basic resource cleaning
+[ ] Black/whitelist resources
+[ ] Expiry timestamp
+[ ] Helm chart
+
+
+DEVELOPING
+
+Setup a local minikube cluster[1]. Then, clone this repo and install
+dependencies:
+
+    $ poetry shell
+    $ poetry install
+
+Build a docker image (gets stored in minikube's registry):
+
+    $ eval $(minikube env-docker)
+    $ docker build -t janny:latest .
+
+Finally, deploy to your cluster:
+
+    $ kubectl apply -f deploy/deployment.yaml
+
+Note: Absolutely nothing works at the moment, so don't even bother.
+
+
+PRIOR ART
+
+https://codeberg.org/hjacobs/kube-janitor: While kube-janitor already
+does the same thing, it's written using pykube, which has been
+undeveloped since 2017.
+
+
+[1]: https://minikube.sigs.k8s.io/docs/
