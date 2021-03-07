@@ -20,4 +20,5 @@ def kube_auth():
 
     return session
 
+
 SESSION = kube_auth()

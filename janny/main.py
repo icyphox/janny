@@ -1,20 +1,21 @@
 from janny.utils import get
 
-def get_resources():
+
+def get_resource_urls():
     apis = get("/apis/")
     apiv1 = get("/api/v1")
 
-    resource_objs = list()
-    resource_objs.append(apiv1.resources)
+    resource_urls = dict()
+    resource_urls["/api/v1"] = apiv1.resources
 
     for g in apis.groups:
-        resource_objs.append(get("/apis/" + g.preferredVersion.groupVersion).resources)
+        version = g.preferredVersion.groupVersion
+        resource_urls["/apis/" + version] = get(
+            "/apis/" + g.preferredVersion.groupVersion
+        ).resources
 
-    for resources in resource_objs:
-        for r in resources:
-            if "/" not in r.name and r.namespaced:
-                yield r.name
+    return resource_urls
+
 
 def main():
-    for r in get_resources():
-        print(r)
+    get_resource_urls()

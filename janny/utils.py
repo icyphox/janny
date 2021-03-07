@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from janny.config import API_HOST
 from janny.auth import SESSION
 
+
 def get(path):
     """Convert a JSON response into a Python object"""
     s = SESSION
