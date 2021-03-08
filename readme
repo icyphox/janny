@@ -6,7 +6,7 @@ resources after a set TTL.
 
 ROADMAP
 
-[ ] Implement basic resource cleaning
+[x] Implement basic resource cleaning
 [ ] Black/whitelist resources
 [ ] Expiry timestamp
 [ ] Helm chart
