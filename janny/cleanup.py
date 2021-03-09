@@ -20,5 +20,6 @@ def send_delete_event(url: str, kube_resource: str, resource_name: str, namespac
     api_url = f"{API_HOST}{url}/namespaces/{namespace}/{kube_resource}/{resource_name}"
     response = s.delete(api_url, params={"propagationPolicy": "Background"})
     logger.info(f"Sent delete event to {kube_resource}/{resource_name}")
-    if "Success" not in json.loads(response.content):
-        logger.error(f"Deletion did not succeed. Recieved: {response.content}")
+    response_json = json.loads(response.content)
+    if "Success" not in response_json.values():
+        logger.error(f"Deletion did not succeed. Recieved: {response_json}")

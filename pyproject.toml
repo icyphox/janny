@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "janny"
 version = "0.1.0"
-description = "Delete Kubernetes resources after a set time"
+description = "Delete Kubernetes resources after a set TTL"
 authors = ["Anirudh Oppiliappan <x@icyphox.sh>"]
 license = "MIT"
 
