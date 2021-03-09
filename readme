@@ -34,10 +34,18 @@ namespaces for janny to operate on.
 
     $ kubectl apply -f deploy/
 
+
 Helm chart
 ----------
 
 TODO
+
+Once deployed, janny will look for resources having the 'janny.ttl'
+annotation. Something like:
+
+    janny.ttl: 15m
+    janny.ttl: 1d14h
+    janny.ttl: 6h45m
 
 
 DEVELOPING
