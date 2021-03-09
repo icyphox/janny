@@ -1,4 +1,5 @@
 import time
+import json
 
 from janny.utils import parse_delta
 from janny.auth import SESSION as s
@@ -13,9 +14,11 @@ def clean_up(
     time.sleep(secs)
     logger.info(f"Slept for {kill_time}. Cleaning resource {resource_name} now.")
     send_delete_event(url, kube_resource, resource_name, namespace)
-    logger.info(f"Sent delete event to {kube_resource}/{resource_name}")
 
 
 def send_delete_event(url: str, kube_resource: str, resource_name: str, namespace: str):
-    api_url = f"{API_HOST}/{url}/namespaces/{namespace}/{kube_resource}/{resource_name}"
-    s.delete(api_url, params={"propagationPolicy": "Background"})
+    api_url = f"{API_HOST}{url}/namespaces/{namespace}/{kube_resource}/{resource_name}"
+    response = s.delete(api_url, params={"propagationPolicy": "Background"})
+    logger.info(f"Sent delete event to {kube_resource}/{resource_name}")
+    if "Success" not in json.loads(response.content):
+        logger.error(f"Deletion did not succeed. Recieved: {response.content}")
