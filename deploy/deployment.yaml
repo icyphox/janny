@@ -4,8 +4,6 @@ metadata:
   name: janny
   labels:
     app: janny
-  annotations:
-    janny.ttl: "2m"
 spec:
   selector:
     matchLabels:
