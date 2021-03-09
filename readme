@@ -7,9 +7,37 @@ resources after a set TTL.
 ROADMAP
 
 [x] Implement basic resource cleaning
-[ ] Black/whitelist resources
+[x] Black/whitelist resources (--included-resources flag)
 [ ] Expiry timestamp
 [ ] Helm chart
+
+USAGE
+
+Two ways to deploy janny: plain Kubernetes manifests or via a Helm
+chart.
+
+Kubernetes manifests
+--------------------
+
+1. Modify deploy/deployment.yaml: specify included resources, and
+namespaces for janny to operate on.
+
+2. Create a service account
+
+    $ kubectl create sa janny
+
+3. Modify deploy/clusterrole.yaml to limit janny's access to resources.
+   Ensure that janny has access to the resources you specified in the
+   deployment.yaml!
+
+4. Deploy janny:
+
+    $ kubectl apply -f deploy/
+
+Helm chart
+----------
+
+TODO
 
 
 DEVELOPING
@@ -29,11 +57,6 @@ Finally, deploy to your cluster:
 
     $ kubectl create sa janny
     $ kubectl apply -f deploy/
-
-This will create a ServiceAccount, ClusterRole, ClusterRoleBinding and a
-Deployment. Edit to suit your needs.
-
-Note: Absolutely nothing works at the moment, so don't even bother.
 
 
 PRIOR ART
