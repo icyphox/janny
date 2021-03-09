@@ -21,3 +21,8 @@ spec:
         - name: janny
           image: janny:latest
           imagePullPolicy: IfNotPresent
+          args:
+            - "--included-resources"
+            - "deployments,configmaps,pods"
+            - "--namespaces"
+            - "default"

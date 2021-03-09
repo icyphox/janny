@@ -49,25 +49,28 @@ def spawn_clean_up_job(resource_tuple: tuple, namespace: str):
     """
     url, resource = resource_tuple
     resource_list = get(f"{url}/namespaces/{namespace}/{resource.name}")
-    for r in resource_list.items:
-        try:
-            if (
-                "janny.ttl" in vars(r.metadata.annotations)
-                and r.metadata.name not in RUNNING
-            ):
-                logger.info(
-                    f"New resource to clean up: {resource.name}/{r.metadata.name}: {vars(r.metadata.annotations)}"
-                )
-                kill_time = vars(r.metadata.annotations)["janny.ttl"]
-                t = threading.Thread(
-                    target=clean_up,
-                    args=[url, resource.name, r.metadata.name, kill_time, namespace],
-                )
-                logger.info(f"Starting cleaner thread for {r.metadata.name}")
-                RUNNING.append(r.metadata.name)
-                t.start()
-        except AttributeError:
-            pass
+    try:
+        for r in resource_list.items:
+            try:
+                if (
+                    "janny.ttl" in vars(r.metadata.annotations)
+                    and r.metadata.name not in RUNNING
+                ):
+                    logger.info(
+                        f"New resource to clean up: {resource.name}/{r.metadata.name}: {vars(r.metadata.annotations)}"
+                    )
+                    kill_time = vars(r.metadata.annotations)["janny.ttl"]
+                    t = threading.Thread(
+                        target=clean_up,
+                        args=[url, resource.name, r.metadata.name, kill_time, namespace],
+                    )
+                    logger.info(f"Starting cleaner thread for {r.metadata.name}")
+                    RUNNING.append(r.metadata.name)
+                    t.start()
+            except AttributeError:
+                pass
+    except AttributeError:
+        logger.error(f"Received: {resource_list.message}")
 
 
 def main(include_list, namespace_list):
