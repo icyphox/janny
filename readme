@@ -27,7 +27,11 @@ Build a docker image (gets stored in minikube's registry):
 
 Finally, deploy to your cluster:
 
-    $ kubectl apply -f deploy/deployment.yaml
+    $ kubectl create sa janny
+    $ kubectl apply -f deploy/
+
+This will create a ServiceAccount, ClusterRole, ClusterRoleBinding and a
+Deployment. Edit to suit your needs.
 
 Note: Absolutely nothing works at the moment, so don't even bother.
 
