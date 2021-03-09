@@ -35,3 +35,6 @@ def parse_delta(delta: str) -> timedelta:
         parts = {k: int(v) for k, v in match.groupdict().items() if v}
         return timedelta(**parts)
     return timedelta(0)
+
+# List of running threads
+RUNNING = list()

@@ -1,12 +1,10 @@
 import threading
 import itertools
 
-from janny.utils import get
+from janny.utils import get, RUNNING
 from janny.cleanup import clean_up
 from janny.config import logger
 
-
-RUNNING = []
 
 
 def get_resource_urls() -> list:
