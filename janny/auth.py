@@ -1,8 +1,7 @@
 import requests
-import logging
 import os
 
-logging.basicConfig(level=logging.INFO)
+from janny.config import logger
 
 
 def kube_auth():
@@ -14,9 +13,9 @@ def kube_auth():
             token = f.read()
         session.verify = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
         session.headers.update({"Authorization": f"Bearer {token}"})
-        logging.info("Authenticated with the API server")
+        logger.info("Authenticated with the API server")
     else:
-        logging.info("Not in-cluster, continuing as is")
+        logger.info("Not in-cluster, continuing as is")
 
     return session
 

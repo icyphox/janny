@@ -1,10 +1,11 @@
 import threading
-import logging
 
 from janny.utils import get
 from janny.cleanup import clean_up
+from janny.config import logger
 
-logging.basicConfig(level=logging.INFO)
+
+RUNNING = []
 
 
 def get_resource_urls() -> list:
@@ -48,18 +49,25 @@ def spawn_clean_up_job(resource_tuple: tuple, namespace: str):
     url, resource = resource_tuple
     resource_list = get(f"{url}/namespaces/{namespace}/{resource.name}")
     for r in resource_list.items:
-        if "janny.ttl" in vars(r.metadata.annotations):
-            print(r.metadata.annotations)
+        if (
+            "janny.ttl" in vars(r.metadata.annotations)
+            and r.metadata.name not in RUNNING
+        ):
+            logger.info(
+                f"New resource to clean up: {resource.name}/{r.metadata.name}: {vars(r.metadata.annotations)}"
+            )
             kill_time = vars(r.metadata.annotations)["janny.ttl"]
             t = threading.Thread(
                 target=clean_up,
                 args=[url, resource.name, r.metadata.name, kill_time, namespace],
             )
-            logging.info(f"Starting cleaner thread for {r.metadata.name}")
+            logger.info(f"Starting cleaner thread for {r.metadata.name}")
+            RUNNING.append(r.metadata.name)
             t.start()
 
 
 def main():
-    filtered = filter_included_resources(["deployments"], get_resource_urls())
-    for f in filtered:
-        spawn_clean_up_job(f, "default")
+    while True:
+        filtered = filter_included_resources(["deployments"], get_resource_urls())
+        for f in filtered:
+            spawn_clean_up_job(f, "default")
