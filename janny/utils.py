@@ -36,5 +36,6 @@ def parse_delta(delta: str) -> timedelta:
         return timedelta(**parts)
     return timedelta(0)
 
-# List of running threads
+
+# List of running threads. Storing it here to prevent circular imports.
 RUNNING = list()

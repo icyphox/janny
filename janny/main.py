@@ -6,7 +6,6 @@ from janny.cleanup import clean_up
 from janny.config import logger
 
 
-
 def get_resource_urls() -> list:
     """
     Returns a list of tuples of all namespaced resources.
@@ -50,17 +49,24 @@ def spawn_clean_up_job(resource_tuple: tuple, namespace: str):
     try:
         for r in resource_list.items:
             try:
+                annotations = vars(r.metadata.annotations)
                 if (
-                    "janny.ttl" in vars(r.metadata.annotations)
+                    "janny.ttl" in annotations
                     and r.metadata.name not in RUNNING
                 ):
                     logger.info(
-                        f"New resource to clean up: {resource.name}/{r.metadata.name}: {vars(r.metadata.annotations)}"
+                        f"New resource to clean up: {resource.name}/{r.metadata.name}: ttl: {annotations['janny.ttl']}"
                     )
                     kill_time = vars(r.metadata.annotations)["janny.ttl"]
                     t = threading.Thread(
                         target=clean_up,
-                        args=[url, resource.name, r.metadata.name, kill_time, namespace],
+                        args=[
+                            url,
+                            resource,
+                            r.metadata.name,
+                            kill_time,
+                            namespace,
+                        ],
                     )
                     logger.info(f"Starting cleaner thread for {r.metadata.name}")
                     RUNNING.append(r.metadata.name)
