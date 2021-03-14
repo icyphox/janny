@@ -47,12 +47,13 @@ def spawn_clean_up_job(resource_tuple: tuple, namespace: str):
     url, resource = resource_tuple
     resource_list = get(f"{url}/namespaces/{namespace}/{resource.name}")
     try:
+        # items = [i for r in resource_list.items if "janny.ttl" in vars(r.metadata.annotations) and r.metadata.name not in RUNNING]
         for r in resource_list.items:
             try:
                 annotations = vars(r.metadata.annotations)
                 if (
                     "janny.ttl" in annotations
-                    and r.metadata.name not in RUNNING
+                    and f"{resource}/{r.metadata.name}" not in RUNNING
                 ):
                     logger.info(
                         f"New resource to clean up: {resource.name}/{r.metadata.name}: ttl: {annotations['janny.ttl']}"
@@ -69,7 +70,7 @@ def spawn_clean_up_job(resource_tuple: tuple, namespace: str):
                         ],
                     )
                     logger.info(f"Starting cleaner thread for {r.metadata.name}")
-                    RUNNING.append(r.metadata.name)
+                    RUNNING.append(f"{resource}/{r.metadata.name}")
                     t.start()
             except AttributeError:
                 pass
